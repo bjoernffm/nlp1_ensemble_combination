@@ -3,6 +3,7 @@ package Common;
 import com.bigdata.rdf.sail.webapp.client.RemoteRepository;
 import com.bigdata.rdf.sail.webapp.client.RemoteRepositoryManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,12 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
 
 public class Blazegraph {
+	
+	Cacher cacher;
+	
+	public Blazegraph() {
+		this.cacher = new Cacher();
+	}
 	
 	public List<String> query(String query) throws Exception
 	{
@@ -55,13 +62,19 @@ public class Blazegraph {
 	
 	public List<String> queryGermanSTTS(String POS) throws Exception
 	{
-		List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/stts.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
-		
-		if (!resultList.contains(POS)) {
-			resultList.add(POS);
+		if (this.cacher.contains("STTS", POS)) {
+			return this.cacher.get("STTS", POS);
+		} else {
+			List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/stts.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
+			
+			if (!resultList.contains(POS)) {
+				resultList.add(POS);
+			}
+			
+			this.cacher.set("STTS", POS, resultList);
+			
+			return resultList;
 		}
-		
-		return resultList;
 	}
 	
 	public List<String> queryDanishEnglishPTB(String POS) throws Exception

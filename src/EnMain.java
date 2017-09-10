@@ -13,7 +13,7 @@ public class EnMain {
 
 			List<String> result;
 			
-			result = bs.queryAfrikaansUD("NOUN");
+			/*result = bs.queryAfrikaansUD("NOUN");
 			System.out.println(result);
 			result = bs.queryGermanSTTS("NN");
 			System.out.println(result);
@@ -24,9 +24,9 @@ public class EnMain {
 			result = bs.queryDutchLassyShort("BW");
 			System.out.println(result);
 			result = bs.querySwedishSTagger("PM");
-			System.out.println(result);
+			System.out.println(result);*/
 			
-			/*Parser parser = new Parser("projections-no-norm.txt");
+			Parser parser = new Parser("projections-no-norm.txt");
 			
 			String content = parser.getContent();
 			String[] tokens = content.split("\n", -1);
@@ -39,10 +39,10 @@ public class EnMain {
 					continue;
 				}
 				
-				List<String> result = bs.queryGermanSTTS(pos[2]);
-				System.out.println(result);
-				System.out.println(i+"/"+tokens.length);
-			}*/
+				result = bs.queryGermanSTTS(pos[2]);
+				//System.out.println(result);
+				//System.out.println(i+"/"+tokens.length);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
