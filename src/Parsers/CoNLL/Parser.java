@@ -1,7 +1,7 @@
 package Parsers.CoNLL;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import Common.FileReader;
@@ -12,13 +12,13 @@ public class Parser extends FileReader {
 		super(filename);
 	}
 	
-	public void getTokenContainer()
+	public List<Token> getTokenContainer()
 	{
 		String content = this.getContent();
 		String[] tokens = content.split("\n", -1);
 		String[] pos;
 		
-		List<Token> tokenList = new ArrayList<Token>();
+		List<Token> tokenList = new LinkedList<Token>();
 		
 		for(int i = 0; i < tokens.length-1; i++) {
 			pos = tokens[i].split("\t", -1);
@@ -34,6 +34,8 @@ public class Parser extends FileReader {
 		content = null;
 		tokens = null;
 		pos = null;
+		
+		return tokenList;
 	}
 
 }
