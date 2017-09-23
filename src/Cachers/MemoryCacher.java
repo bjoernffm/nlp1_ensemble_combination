@@ -1,15 +1,15 @@
-package Common;
+package Cachers;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Cacher {
+import Interfaces.Cacher;
+
+public class MemoryCacher implements Cacher {
 	Map<String, List<String>> map;
 	
-	public Cacher() {
+	public MemoryCacher() {
 		this.map = new HashMap<String, List<String>>();
 	}
 	
@@ -26,5 +26,10 @@ public class Cacher {
 	public boolean contains(String namespace, String POS)
 	{
 		return this.map.containsKey(namespace+'_'+POS);
+	}
+	
+	public int size()
+	{
+		return this.map.size();
 	}
 }

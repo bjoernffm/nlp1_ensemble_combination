@@ -3,6 +3,9 @@ package Common;
 import com.bigdata.rdf.sail.webapp.client.RemoteRepository;
 import com.bigdata.rdf.sail.webapp.client.RemoteRepositoryManager;
 
+import Cachers.MemoryCacher;
+import Interfaces.Cacher;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,11 +18,12 @@ import org.openrdf.query.TupleQueryResult;
 
 public class Blazegraph {
 	
-	Cacher cacher;
-	Map<String, String> equalizations;
+	protected Cacher cacher;
+	protected Map<String, String> equalizations;
+	public int queriesCount = 0;
 	
 	public Blazegraph() {
-		this.cacher = new Cacher();
+		this.cacher = new MemoryCacher();
 		ArrayList<String> emptyList = new ArrayList<String>();
 		
 		this.cacher.set("UD", "...", emptyList);
@@ -39,6 +43,7 @@ public class Blazegraph {
 		RemoteRepository repo = repoManager.getRepositoryForNamespace("kb");
 		TupleQueryResult result = repo.prepareTupleQuery(query).evaluate();
 		repoManager.close();
+		this.queriesCount++;
 
 		List<String> resultList = new ArrayList<String>();
 		String[] parts;
@@ -126,7 +131,6 @@ public class Blazegraph {
 		if (this.cacher.contains("LassyShort", POS)) {
 			return this.cacher.get("LassyShort", POS);
 		} else {
-			POS = POS.toLowerCase();
 			List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/lassy-short.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
 			
 			if (!resultList.contains(POS)) {
@@ -144,7 +148,6 @@ public class Blazegraph {
 		if (this.cacher.contains("STagger", POS)) {
 			return this.cacher.get("STagger", POS);
 		} else {
-			POS = POS.toLowerCase();
 			List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/suc.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
 			
 			if (!resultList.contains(POS)) {
@@ -155,5 +158,10 @@ public class Blazegraph {
 			
 			return resultList;
 		}
+	}
+	
+	public Cacher getCacher()
+	{
+		return this.cacher;
 	}
 }
