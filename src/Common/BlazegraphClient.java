@@ -6,23 +6,21 @@ import com.bigdata.rdf.sail.webapp.client.RemoteRepositoryManager;
 import Cachers.MemoryCacher;
 import Interfaces.Cacher;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
 
-public class Blazegraph {
+public class BlazegraphClient {
 	
 	protected Cacher cacher;
 	protected Map<String, String> equalizations;
 	public int queriesCount = 0;
 	
-	public Blazegraph() {
+	public BlazegraphClient() {
 		this.cacher = new MemoryCacher();
 		ArrayList<String> emptyList = new ArrayList<String>();
 		
