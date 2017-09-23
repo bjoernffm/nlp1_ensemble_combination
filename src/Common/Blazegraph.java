@@ -5,7 +5,10 @@ import com.bigdata.rdf.sail.webapp.client.RemoteRepositoryManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQueryResult;
@@ -13,9 +16,21 @@ import org.openrdf.query.TupleQueryResult;
 public class Blazegraph {
 	
 	Cacher cacher;
+	Map<String, String> equalizations;
 	
 	public Blazegraph() {
 		this.cacher = new Cacher();
+		ArrayList<String> emptyList = new ArrayList<String>();
+		
+		this.cacher.set("UD", "...", emptyList);
+		this.cacher.set("STTS", "...", emptyList);
+		this.cacher.set("PTB", "...", emptyList);
+		this.cacher.set("LassyShort", "...", emptyList);
+		this.cacher.set("STagger", "...", emptyList);
+
+		this.equalizations = new HashMap<String, String>();
+		this.equalizations.put("Noun", "NN");		
+		this.equalizations.put("Conjunction", "CONJ");		
 	}
 	
 	public List<String> query(String query) throws Exception
@@ -33,11 +48,17 @@ public class Blazegraph {
 				BindingSet bs = result.next();
 
 				parts = bs.getValue("a").toString().split("#");
+				/*if (parts.length > 1 && this.equalizations.containsKey(parts[1])) {
+					resultList.add(this.equalizations.get(parts[1]));
+				}*/
 				if (parts.length > 1 && !resultList.contains(parts[1])) {
 					resultList.add(parts[1]);
 				}
 				
 				parts = bs.getValue("c").toString().split("#");
+				/*if (parts.length > 1 && this.equalizations.containsKey(parts[1])) {
+					resultList.add(this.equalizations.get(parts[1]));
+				}*/
 				if (parts.length > 1 && !resultList.contains(parts[1])) {
 					resultList.add(parts[1]);
 				}
@@ -51,13 +72,19 @@ public class Blazegraph {
 	
 	public List<String> queryAfrikaansUD(String POS) throws Exception
 	{
-		List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/universal_dependencies.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
-		
-		if (!resultList.contains(POS)) {
-			resultList.add(POS);
+		if (this.cacher.contains("UD", POS)) {
+			return this.cacher.get("UD", POS);
+		} else {			
+			List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/universal_dependencies.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
+			
+			if (!resultList.contains(POS)) {
+				resultList.add(POS);
+			}
+			
+			this.cacher.set("UD", POS, resultList);
+			
+			return resultList;
 		}
-		
-		return resultList;
 	}
 	
 	public List<String> queryGermanSTTS(String POS) throws Exception
@@ -79,36 +106,54 @@ public class Blazegraph {
 	
 	public List<String> queryDanishEnglishPTB(String POS) throws Exception
 	{
-		List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/penn.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
-		
-		if (!resultList.contains(POS)) {
-			resultList.add(POS);
+		if (this.cacher.contains("PTB", POS)) {
+			return this.cacher.get("PTB", POS);
+		} else {
+			List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/penn.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
+			
+			if (!resultList.contains(POS)) {
+				resultList.add(POS);
+			}
+	
+			this.cacher.set("PTB", POS, resultList);
+			
+			return resultList;
 		}
-		
-		return resultList;
 	}
 	
 	public List<String> queryDutchLassyShort(String POS) throws Exception
 	{
-		POS = POS.toLowerCase();
-		List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/lassy-short.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
-		
-		if (!resultList.contains(POS)) {
-			resultList.add(POS);
+		if (this.cacher.contains("LassyShort", POS)) {
+			return this.cacher.get("LassyShort", POS);
+		} else {
+			POS = POS.toLowerCase();
+			List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/lassy-short.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
+			
+			if (!resultList.contains(POS)) {
+				resultList.add(POS);
+			}
+			
+			this.cacher.set("LassyShort", POS, resultList);
+			
+			return resultList;
 		}
-		
-		return resultList;
 	}
 	
 	public List<String> querySwedishSTagger(String POS) throws Exception
 	{
-		POS = POS.toLowerCase();
-		List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/suc.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
-		
-		if (!resultList.contains(POS)) {
-			resultList.add(POS);
+		if (this.cacher.contains("STagger", POS)) {
+			return this.cacher.get("STagger", POS);
+		} else {
+			POS = POS.toLowerCase();
+			List<String> resultList = this.query("prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix stts: <http://purl.org/olia/suc.owl#> SELECT ?a ?c WHERE { stts:"+POS+" rdf:type ?a. ?a rdfs:subClassOf* ?c }");
+			
+			if (!resultList.contains(POS)) {
+				resultList.add(POS);
+			}
+	
+			this.cacher.set("STagger", POS, resultList);
+			
+			return resultList;
 		}
-		
-		return resultList;
 	}
 }

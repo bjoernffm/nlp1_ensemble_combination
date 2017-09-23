@@ -1,0 +1,5 @@
+Probleme:
+
+- Benennungen von POS-Tags sind unterschiedlich
+- POS-Tags haben z.T. Rechtschreibfehler: LingusticAnnotation (LinguisticAnnotation)
+- POS-Tag PRP$ ist falsch - das Prozentzeichen musste weg -> PRP (projections-no-norm.txt muss geändert werden)
