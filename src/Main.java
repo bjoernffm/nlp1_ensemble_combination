@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.io.PrintWriter;
 
 import Common.FileReader;
@@ -12,6 +11,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
+
+			System.out.println("Starting the training");
+			
 			// training
 			TaggerTrainer taggerTrainer = new TaggerTrainer();
 			FileReader reader = new FileReader("projections-no-norm.txt");
@@ -20,12 +22,11 @@ public class Main {
 			taggerTrainer.setContent(content);
 			TrainerResult result = taggerTrainer.getResult();
 
-			System.out.println(result.toString()+"\n");
+			System.out.println("Traning result:");
+			System.out.println(result.toString());
 
 			// testing RandomDecider
-			System.out.println("+----------------------------------------------------+");
-			System.out.println("| Annotation using the RandomDecider                 |");
-			System.out.println("+----------------------------------------------------+\n");
+			System.out.print("Writing annotation using the RandomDecider ... ");
 			
 		    PrintWriter randomDeciderWriter = new PrintWriter("random_decider_annotation.txt", "UTF-8");
 			Decider decider = new RandomDecider(result.getTaggerConfidence());
@@ -46,11 +47,10 @@ public class Main {
 			}
 			
 			randomDeciderWriter.close();
+			System.out.println("[ DONE ]");
 			
 			// testing StaticDecider
-			System.out.println("+----------------------------------------------------+");
-			System.out.println("| Annotation using the StaticDecider                 |");
-			System.out.println("+----------------------------------------------------+\n");
+			System.out.print("Writing annotation using the StaticDecider ... ");
 			
 		    PrintWriter staticDeciderWriter = new PrintWriter("static_decider_annotation.txt", "UTF-8");
 			decider = new RandomDecider(result.getTaggerConfidence());
@@ -70,6 +70,7 @@ public class Main {
 			}
 			
 			staticDeciderWriter.close();
+			System.out.println("[ DONE ]");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
