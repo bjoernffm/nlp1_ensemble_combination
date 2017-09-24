@@ -31,8 +31,61 @@ public class BlazegraphClient {
 		this.cacher.set("STagger", "...", emptyList);
 
 		this.equalizations = new HashMap<String, String>();
-		this.equalizations.put("Noun", "NN");		
-		this.equalizations.put("Conjunction", "CONJ");		
+		//this.equalizations.put("Noun", "NN");		
+		//this.equalizations.put("Conjunction", "CONJ");	
+		
+		this.equalizations.put("NOUN", "N");
+		this.equalizations.put("NN", "N");
+		this.equalizations.put("NNS", "N");
+		this.equalizations.put("NNP", "N");
+		this.equalizations.put("NNPS", "N");
+		this.equalizations.put("NE", "N");
+		
+		this.equalizations.put("Conjunction", "CONJ");
+		this.equalizations.put("KN", "CONJ");
+		this.equalizations.put("VG", "CONJ");
+		this.equalizations.put("CC", "CONJ");
+		this.equalizations.put("KOUI", "CONJ");
+		this.equalizations.put("KOUS", "CONJ");
+		this.equalizations.put("KON", "CONJ");
+		this.equalizations.put("KOKOM", "CONJ");
+		
+		this.equalizations.put("WW", "VB");
+		this.equalizations.put("VERB", "VB");
+		this.equalizations.put("VBD", "VB");
+		this.equalizations.put("VBG", "VB");
+		this.equalizations.put("VBN", "VB");
+		this.equalizations.put("VBP", "VB");
+		this.equalizations.put("VBZ", "VB");
+		this.equalizations.put("VVFIN", "VB");
+		this.equalizations.put("VVIMP", "VB");
+		this.equalizations.put("VVINF", "VB");
+		this.equalizations.put("VVIZU", "VB");
+		this.equalizations.put("VVPP", "VB");
+		this.equalizations.put("VAFIN", "VB");
+		this.equalizations.put("VAIMP", "VB");
+		this.equalizations.put("VAINF", "VB");
+		this.equalizations.put("VVPP", "VB");
+		this.equalizations.put("VMFIN", "VB");
+		this.equalizations.put("VMINF", "VB");
+		this.equalizations.put("VMPP", "VB");
+		
+		this.equalizations.put("JJ", "ADJ");
+		this.equalizations.put("JJR", "ADJ");
+		this.equalizations.put("JJS", "ADJ");
+		this.equalizations.put("ADJA", "ADJ");
+		this.equalizations.put("ADJD", "ADJ");
+		
+		this.equalizations.put("AB", "ADV");
+		this.equalizations.put("BW", "ADV");
+		this.equalizations.put("RB", "ADV");
+		this.equalizations.put("RBR", "ADV");
+		this.equalizations.put("RBS", "ADV");
+		
+		this.equalizations.put("DET", "DT");
+		
+		this.equalizations.put("VZ", "PP");
+		this.equalizations.put("IN", "PP");		
 	}
 	
 	public List<String> query(String query) throws Exception
