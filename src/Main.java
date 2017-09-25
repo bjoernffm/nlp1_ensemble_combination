@@ -27,8 +27,8 @@ public class Main {
 
 			// testing RandomDecider
 			System.out.print("Writing annotation using the RandomDecider ... ");
-			
-		    PrintWriter randomDeciderWriter = new PrintWriter("random_decider_annotation.txt", "UTF-8");
+
+			PrintWriter randomDeciderWriter = new PrintWriter("random_decider_annotation.txt", "UTF-8");
 			Decider decider = new RandomDecider(result.getTaggerConfidence());
 
 			String[] rows = reader.getContent().split("\n", -1);
@@ -51,8 +51,8 @@ public class Main {
 			
 			// testing StaticDecider
 			System.out.print("Writing annotation using the StaticDecider ... ");
-			
-		    PrintWriter staticDeciderWriter = new PrintWriter("static_decider_annotation.txt", "UTF-8");
+
+			PrintWriter staticDeciderWriter = new PrintWriter("static_decider_annotation.txt", "UTF-8");
 			decider = new RandomDecider(result.getTaggerConfidence());
 
 			rows = reader.getContent().split("\n", -1);
